@@ -3,40 +3,63 @@ title: "Assigment 2, part 3"
 format: html
 editor: visual
 ---
+Hvordan påvirker knebøy volum hypertrofi i Vastus Lateralis?
 
-```{r}
-
-## Hvordan påvirker knebøy volum hypertrofi i vastus lateralis?
+```{r, warning=FALSE, message=FALSE}
 
 library(tidyverse)
 library(exscidata)
+library(gt)
 data("hypertrophy")
 
-glimpse(hypertrophy) ## for å få en oversikt over datasettet
+```
 
-?hypertrophy ## for å se en beskrivelse av alle kategorier.
+Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i knebøy per deltager.
 
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
 hypertrophy %>% 
   mutate(VL_change = VL_T4 - VL_T1) %>% 
-  select(PARTICIPANT, VL_change) %>% 
-  print()
+  select(PARTICIPANT, VL_change, SQUAT_VOLUME) %>% 
+  gt(hypertrophy)
 
+
+```
+
+
+
+```{r, echo=FALSE}
 dat <- hypertrophy %>%
   select(PARTICIPANT, SQUAT_VOLUME, VL_T4, VL_T1) %>%
-  mutate(VL_change = VL_T4/VL_T1) %>% 
-  print()
+  mutate(VL_change = VL_T4/VL_T1)
 
+```
+
+plot() funksjon for grafisk vurdering av data. 
+
+```{r, echo=FALSE}
 mod <- lm(VL_change ~ SQUAT_VOLUME, data = dat)
 
 plot(mod)
 
+
+```
+
+Reresjonstabell
+
+```{r, echo=FALSE}
 summary(mod)
 
+
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 dat %>% 
   ggplot(aes(SQUAT_VOLUME, VL_change)) +
   geom_smooth(method = "lm") +
   geom_point()
 ```
+
 
 1.	For hver enhet (kg) løftet i knebøy, er den relative endringen i volum målt i Vastus Lateralis med -0.000001256 (-1.1256e-06), P-value = 0.281.
 
