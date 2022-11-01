@@ -17,6 +17,9 @@ When you click the **Knit** button a document will be generated that includes bo
 
 
 ```{r}
+
+## Hvordan påvirker knebøy volum hypertrofi i vastus lateralis?
+
 library(tidyverse)
 library(exscidata)
 data("hypertrophy")
@@ -45,5 +48,15 @@ dat %>%
   ggplot(aes(SQUAT_VOLUME, VL_change)) +
   geom_smooth(method = "lm") +
   geom_point()
+
+## 
 ```
 
+1.	Tolke resultatene i regresjonstabellen
+a.	For hver enhet (kg) løftet i knebøy, er den relative endringen i volum målt i Vastus Lateralis med -0.000001256 (-1.1256e-06), P-value = 0.281.
+2.	forklare standardaavik
+a.	Standardavvik er et mål for spredning i verdiene. I vårt datasett er standardavviket 
+3.	forklare t-verdi
+a.	T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimat koeffisienten delt på standardavviket.
+4.	forklare p-verdi
+a.	P-verdien forteller oss hvor stor sannsynligheten er for at en observert forskjell mellom datasett skylder tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, gir oss en stor sannsynlighet for at den observerte forskjellen skyldes tilfeldigheter.
