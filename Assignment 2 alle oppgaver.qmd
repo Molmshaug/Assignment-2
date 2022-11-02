@@ -167,9 +167,14 @@ preds <- exp(predict(cal, newdata = unknown))
 De predikerte tallene representerer størrelsen på DNA-fragmentene
 
 ```{r}
-# Calculate predicted  size and reducing  number of decimals
 
-round(preds,2)
+# Making table
+
+table <- tibble(molekylvekt = round(preds,1))
+
+table %>% 
+  gt() %>% 
+  tab_header(title = md("**Predikerte størrelser på DNA-fragmentene**"))
 
 ```
 
