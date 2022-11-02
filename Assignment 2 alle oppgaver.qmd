@@ -6,16 +6,26 @@ editor: visual
 
 # Oppgave 1
 
-```{r, warning=FALSE, message=FALSE}
+```{r}
+#| include: false
+
+
 library(tidyverse)
 library(exscidata)
 library(modelr)
 library(gt)
 library(gtExtras)
 
+
+
 # import data
 data(cyclingstudy)
+data("hypertrophy")
 
+```
+
+```{r}
+#| include: false
 # new function containing a model-function for later iteration
 subject_model <- function(df) { 
   lm(lactate ~ poly(x, 3, raw = TRUE), data = df)
@@ -26,7 +36,12 @@ df_fun <- function(x) {
   as.data.frame(x)
 }
 
+```
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
 # Table showing LT
 cyclingstudy %>%
@@ -75,8 +90,12 @@ cyclingstudy %>%
   tab_footnote(footnote = "Showing the first 4 rows in the dataset") %>% 
   tab_footnote(footnote = "Abbriviations: LT, lactate threshold")
   
-  
+```
 
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
 
 # Table showing Reliability
 cyclingstudy %>%
@@ -128,25 +147,21 @@ cyclingstudy %>%
 # Oppgave 2
 
 ```{r}
-library(tidyverse)
-
-
 # Create a data frame of known distances and molecular weights
 
 ladder <- data.frame(dist = c(448, 471.5, 501.5, 533.5, 572.5, 622.5, 678.5, 751.5, 790.5, 843.5, 901.5, 963.5, 1041.5), 
-                     mw = c(3000, 2000, 1500, 1000, 900, 800, 
+                     mw = c(1000, 900, 800, 
                             700, 600, 500,
-                            400, 300, 
-                            200, 100))
+                            400, 300, 250,
+                            200,150, 100, 50))
 
             
 
 # Create a new data frame of unknowns
-unknown <- data.frame(dist = c(528.5, 667.5, 733.5, 1024.5,
+unknown <- data.frame(dist = c(
                               530.5, 666.5, 730.5, 1022.5,
                               528.5, 664.5, 727.5, 1020.5,
-                              535.5, 659.5, 723.5, 1016.5,
-                              517.5, 657.5, 719.5, 657.5, 719.5, 655.5, 721.5, 1032.5))
+                              517.5, 657.5, 719.5, NA))
 
   
 # Fit the model
@@ -160,36 +175,35 @@ summary(cal)
 #Create predicted 
 
 preds <- exp(predict(cal, newdata = unknown))
-
-
 ```
 
-De predikerte tallene representerer størrelsen på DNA-fragmentene
+
+De predikerte tallene representerer størrelsen på DNA-fragmentene.
+
 
 ```{r}
 
 # Making table
 
-table <- tibble(molekylvekt = round(preds,1))
+table <- tibble(molekylvekt = round(preds,0),
+                subject = c("Pia","Pia","Pia","Pia","IJ", "IJ","IJ","IJ", "Emil", "Emil","Emil","Emil"),
+                DNA = c(1, 2, 3, 4,1, 2, 3, 4, 1, 2, 3, 4))
 
 table %>% 
+  pivot_wider(names_from = subject, values_from = molekylvekt) %>% 
   gt() %>% 
-  tab_header(title = md("**Predikerte størrelser på DNA-fragmentene**"))
+  tab_header(title = md("**Predikerte størrelser på DNA-fragmentene**")) %>% 
+  cols_label(DNA = md("Fragment<br>nummer")) %>% 
+  tab_spanner(label = "Forsøkspersoner", columns = Pia:Emil)
 
 ```
+
+
 
 # Oppgave 3
 
 Hvordan påvirker knebøy volum hypertrofi i Vastus Lateralis?
 
-```{r, warning=FALSE, message=FALSE}
-
-library(tidyverse)
-library(exscidata)
-library(gt)
-data("hypertrophy")
-
-```
 
 Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i knebøy per deltager.
 
@@ -197,6 +211,7 @@ Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i kn
 hypertrophy %>% 
   mutate(VL_change = VL_T4 - VL_T1) %>% 
   select(PARTICIPANT, VL_change, SQUAT_VOLUME) %>% 
+  slice(1:5) %>% 
   gt(hypertrophy)
 
 
@@ -209,9 +224,9 @@ dat <- hypertrophy %>%
 
 ```
 
-plot() funksjon for grafisk vurdering av data.
+Lager en modell som predikerer endring i vasus lateralis´tverrsnitt opp mot treningsvolum og tester modell opp mot antagelser. 
 
-```{r, echo=FALSE}
+```{r, echo=TRUE}
 mod <- lm(VL_change ~ SQUAT_VOLUME, data = dat)
 
 plot(mod)
@@ -231,13 +246,14 @@ summary(mod)
 dat %>% 
   ggplot(aes(SQUAT_VOLUME, VL_change)) +
   geom_smooth(method = "lm") +
-  geom_point()
+  geom_point() + 
+  theme_bw()
 ```
 
 1.  For hver enhet (kg) løftet i knebøy, er den relative endringen i volum målt i Vastus Lateralis med -0.000001256 (-1.1256e-06), P-value = 0.281.
 
 2.  Standarfeilen er et mål for spredning i verdiene i datasettet. Standardfeilen viser dermed presisjonen i estimatet av gjennomsnittet.
 
-3.  T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimat koeffisienten delt på standardavviket.
+3.  T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimert koeffisient delt på standardfeilet til estimert koeffesient.
 
-4.  P-verdien forteller oss hvor stor sannsynligheten er for at en observert forskjell mellom datasett skylder tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, gir oss en stor sannsynlighet for at den observerte forskjellen skyldes tilfeldigheter.
+4.  P-verdien forteller oss hvor stor sannsynligheten er for at et observert  avvik fra nullhypotesen ikke skyldes tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, som viser at sannsynligheten for at den observerte forskjellen skyldes tilfeldigheter er 28%. Dette er høyere enn signifikansterskelen på 5%.
