@@ -63,7 +63,7 @@ dat %>%
 
 1.	For hver enhet (kg) løftet i knebøy, er den relative endringen i volum målt i Vastus Lateralis med -0.000001256 (-1.1256e-06), P-value = 0.281.
 
-2.	Standarfeilen er et mål for spredning i verdiene. Standardfeilen viser dermed presisjonen i estimatet av gjennomsnittet.
+2.	Standarfeilen er et mål for spredning i verdiene i datasettet. Standardfeilen viser dermed presisjonen i estimatet av gjennomsnittet.
 
 3.	T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimat koeffisienten delt på standardavviket.
 
