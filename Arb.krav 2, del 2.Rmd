@@ -1,0 +1,53 @@
+---
+title: "Arbeidskrav 2 - deloppgave 1"
+author: "IJ"
+date: "2022-11-01"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+
+
+# Create a data frame of known distances and molecular weights
+
+ladder <- data.frame(dist = c(448, 471.5, 501.5, 533.5, 572.5, 622.5, 678.5, 751.5, 790.5, 843.5, 901.5, 963.5, 1041.5), 
+                     mw = c(3000, 2000, 1500, 1000, 900, 800, 
+                            700, 600, 500,
+                            400, 300, 
+                            200, 100))
+
+            
+
+# Create a new data frame of unknowns
+unknown <- data.frame(dist = c(528.5, 667.5, 733.5, 1024.5,
+                              530.5, 666.5, 730.5, 1022.5,
+                              528.5, 664.5, 727.5, 1020.5,
+                              535.5, 659.5, 723.5, 1016.5,
+                              517.5, 657.5, 719.5, 657.5, 719.5, 655.5, 721.5, 1032.5))
+
+  
+# Fit the model
+cal <- lm(log(mw) ~ dist, data = ladder)
+
+
+# Check model performance, R^2 should be ~ 1.
+summary(cal)
+
+
+#Create predicted 
+
+preds <- exp(predict(cal, newdata = unknown))
+
+
+```
+
+De predikerte tallene  representerer  størrelsen på DNA-fragmentene
+```{r}
+# Calculate predicted  size and reducing  number of decimals
+
+round(preds,2)
+
+```
+
