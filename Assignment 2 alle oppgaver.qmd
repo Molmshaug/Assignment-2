@@ -1,0 +1,238 @@
+---
+title: "Arbeidskrav 2"
+format: html
+editor: visual
+---
+
+# Oppgave 1
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+library(exscidata)
+library(modelr)
+library(gt)
+library(gtExtras)
+
+# import data
+data(cyclingstudy)
+
+# new function containing a model-function for later iteration
+subject_model <- function(df) { 
+  lm(lactate ~ poly(x, 3, raw = TRUE), data = df)
+}
+
+# new function for later iteration
+df_fun <- function(x) {
+  as.data.frame(x)
+}
+
+
+
+# Table showing LT
+cyclingstudy %>%
+  select(subject, group, timepoint, lac.125:lac.375) %>%
+  pivot_longer(names_to = "x", 
+               values_to = "lactate", 
+               names_prefix = "lac.",
+               names_transform = list(x = as.numeric),
+               cols = lac.125:lac.375) %>% 
+  filter(!is.na(lactate)) %>% 
+  group_by(subject, timepoint) %>%
+  nest() %>% 
+  mutate(model = map(data, subject_model),
+         watt_range = list(watt = seq(from = 125, to = 375, by = 0.1)),
+         df = map(watt_range, df_fun),
+         pred = map2(df, model, add_predictions)) %>%
+  unnest(pred) %>% 
+  filter(abs(pred - 4) == min(abs(pred - 4)) | 
+           abs(pred - 2) == min(abs(pred - 2))) %>% 
+  select(subject, timepoint, x, pred) %>% 
+  mutate(lactate = if_else(pred > 3, "ana", "aer")) %>% 
+  select(-pred) %>% 
+  rename(watt = x) %>% 
+  pivot_wider(names_from = c(timepoint, lactate),
+              values_from = watt) %>%
+  select(subject, pre_aer, meso1_aer, meso2_aer, meso3_aer,
+         pre_ana, meso1_ana, meso2_ana, meso3_ana) %>% 
+  filter(subject <= 4) %>% 
+  ungroup() %>% 
+  gt() %>% 
+  tab_spanner(columns = pre_aer:meso3_aer, label = "LT at 2 mmol*L") %>% 
+  tab_spanner(columns = pre_ana:meso3_ana, label = "LT at 4 mmol*L") %>% 
+  fmt_number(columns = pre_aer:meso3_ana, decimals = 0) %>% 
+  gt_add_divider(columns = meso3_aer, color = "lightgrey", style = "dotted") %>%
+  cols_label(subject = "Subject",
+             pre_aer = "Pre",
+             meso1_aer = "Meso1",
+             meso2_aer = "Meso2",
+             meso3_aer = "Meso3",
+             pre_ana = "Pre", 
+             meso1_ana = "Meso1",
+             meso2_ana = "Meso2",
+             meso3_ana = "Meso3") %>% 
+  tab_header(title = md("**Calculated Lactate Threshold**"),
+             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
+  tab_footnote(footnote = "Showing the first 4 rows in the dataset") %>% 
+  tab_footnote(footnote = "Abbriviations: LT, lactate threshold")
+  
+  
+
+
+# Table showing Reliability
+cyclingstudy %>%
+  select(subject, group, timepoint, lac.125:lac.375) %>%
+  pivot_longer(names_to = "x", 
+               values_to = "lactate", 
+               names_prefix = "lac.",
+               names_transform = list(x = as.numeric),
+               cols = lac.125:lac.375) %>% 
+  filter(!is.na(lactate)) %>% 
+  group_by(subject, timepoint) %>%
+  nest() %>% 
+  mutate(model = map(data, subject_model),
+         watt_range = list(watt = seq(from = 125, to = 375, by = 0.1)),
+         df = map(watt_range, df_fun),
+         pred = map2(df, model, add_predictions)) %>%
+  unnest(pred) %>% 
+  filter(abs(pred - 4) == min(abs(pred - 4)) | 
+           abs(pred - 2) == min(abs(pred - 2))) %>% 
+  select(subject, timepoint, x, pred) %>% 
+  mutate(lactate = if_else(pred > 3, "4 mmol*L", "2 mmol*L")) %>% 
+  select(-pred) %>% 
+  rename(watt = x) %>% 
+  pivot_wider(names_from = timepoint,
+              values_from = watt) %>% 
+  mutate(diff1 = meso1 - pre,
+         diff2 = meso2 - meso1,
+         diff3 = meso3 - meso2) %>% 
+  pivot_longer(names_to = "diff",
+               values_to = "value",
+               cols = diff1:diff3) %>% 
+  group_by(lactate) %>% 
+  summarise(m = mean(c(pre, meso1, meso2, meso3), na.rm = T),
+            s = round(sd(value, na.rm = T), 1),
+            te = round(s / sqrt(2), 1), 
+            cv = round(100 * (te / m), 1)) %>% 
+  select(-s, -te) %>% 
+  gt(rowname_col = "lactate") %>% 
+  fmt_number(columns = m:cv, decimals = 1) %>% 
+  cols_label(m = "M",
+             cv = "CV") %>%
+  tab_stubhead(label = "Lactate [BLa-]") %>% 
+  tab_header(title = md("**Reliability of lactate threshold**"),
+             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
+  tab_footnote(footnote = "Abbriviations: M, mean; CV, coefficient of variations")
+
+```
+
+# Oppgave 2
+
+```{r}
+library(tidyverse)
+
+
+# Create a data frame of known distances and molecular weights
+
+ladder <- data.frame(dist = c(448, 471.5, 501.5, 533.5, 572.5, 622.5, 678.5, 751.5, 790.5, 843.5, 901.5, 963.5, 1041.5), 
+                     mw = c(3000, 2000, 1500, 1000, 900, 800, 
+                            700, 600, 500,
+                            400, 300, 
+                            200, 100))
+
+            
+
+# Create a new data frame of unknowns
+unknown <- data.frame(dist = c(528.5, 667.5, 733.5, 1024.5,
+                              530.5, 666.5, 730.5, 1022.5,
+                              528.5, 664.5, 727.5, 1020.5,
+                              535.5, 659.5, 723.5, 1016.5,
+                              517.5, 657.5, 719.5, 657.5, 719.5, 655.5, 721.5, 1032.5))
+
+  
+# Fit the model
+cal <- lm(log(mw) ~ dist, data = ladder)
+
+
+# Check model performance, R^2 should be ~ 1.
+summary(cal)
+
+
+#Create predicted 
+
+preds <- exp(predict(cal, newdata = unknown))
+
+
+```
+
+De predikerte tallene representerer størrelsen på DNA-fragmentene
+
+```{r}
+# Calculate predicted  size and reducing  number of decimals
+
+round(preds,2)
+
+```
+
+# Oppgave 3
+
+Hvordan påvirker knebøy volum hypertrofi i Vastus Lateralis?
+
+```{r, warning=FALSE, message=FALSE}
+
+library(tidyverse)
+library(exscidata)
+library(gt)
+data("hypertrophy")
+
+```
+
+Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i knebøy per deltager.
+
+```{r, warning=FALSE, message=FALSE, echo=FALSE}
+hypertrophy %>% 
+  mutate(VL_change = VL_T4 - VL_T1) %>% 
+  select(PARTICIPANT, VL_change, SQUAT_VOLUME) %>% 
+  gt(hypertrophy)
+
+
+```
+
+```{r, echo=FALSE}
+dat <- hypertrophy %>%
+  select(PARTICIPANT, SQUAT_VOLUME, VL_T4, VL_T1) %>%
+  mutate(VL_change = VL_T4/VL_T1)
+
+```
+
+plot() funksjon for grafisk vurdering av data.
+
+```{r, echo=FALSE}
+mod <- lm(VL_change ~ SQUAT_VOLUME, data = dat)
+
+plot(mod)
+
+
+```
+
+Reresjonstabell
+
+```{r, echo=FALSE}
+summary(mod)
+
+
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+dat %>% 
+  ggplot(aes(SQUAT_VOLUME, VL_change)) +
+  geom_smooth(method = "lm") +
+  geom_point()
+```
+
+1.  For hver enhet (kg) løftet i knebøy, er den relative endringen i volum målt i Vastus Lateralis med -0.000001256 (-1.1256e-06), P-value = 0.281.
+
+2.  Standarfeilen er et mål for spredning i verdiene i datasettet. Standardfeilen viser dermed presisjonen i estimatet av gjennomsnittet.
+
+3.  T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimat koeffisienten delt på standardavviket.
+
+4.  P-verdien forteller oss hvor stor sannsynligheten er for at en observert forskjell mellom datasett skylder tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, gir oss en stor sannsynlighet for at den observerte forskjellen skyldes tilfeldigheter.
