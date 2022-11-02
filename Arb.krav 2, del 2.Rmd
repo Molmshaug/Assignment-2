@@ -30,8 +30,10 @@ unknown <- data.frame(dist = c(528.5, 667.5, 733.5, 1024.5,
   
 # Fit the model
 cal <- lm(log(mw) ~ dist, data = ladder)
+```
 
 
+```{r}
 # Check model performance, R^2 should be ~ 1.
 summary(cal)
 
@@ -48,6 +50,9 @@ De predikerte tallene  representerer  størrelsen på DNA-fragmentene
 # Calculate predicted  size and reducing  number of decimals
 
 round(preds,2)
+
+```
+
 
 ```
 
