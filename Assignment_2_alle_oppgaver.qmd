@@ -8,7 +8,7 @@ editor_options:
 
 # Oppgave 1
 
-Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 20 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkrueven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol\*L) med metoden "inverse prediction".
+Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 21 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkurven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol\*L) med metoden "inverse prediction". @tbl-lt viser de predikerte verdiene for fire av deltakerne. 
 
 ```{r}
 #| include: false
@@ -46,9 +46,8 @@ df_fun <- function(x) {
 #| echo: false
 #| warning: false
 #| message: false
-#| label: "lt table"
+#| label: tbl-lt
 #| tbl-cap: "**Calculated Lactate Threshold**"
-#| tbl-subcap: "Using fixed blood lactate concentration method (FBLC)"
 
 # Table showing LT
 cyclingstudy %>%
@@ -75,7 +74,7 @@ cyclingstudy %>%
   pivot_wider(names_from = c(timepoint, lactate),
               values_from = watt) %>%
   select(subject, pre_aer, meso1_aer, meso2_aer, meso3_aer,
-         pre_ana, meso1_ana, meso2_ana, meso3_ana) %>% 
+         pre_ana, meso1_ana, meso2_ana, meso3_ana) %>%
   filter(subject <= 4) %>% 
   ungroup() %>% 
   gt() %>% 
@@ -97,13 +96,16 @@ cyclingstudy %>%
   
 ```
 
+
+Vi undersøkte også reliabiliteten til de to fikserte laktatverdiene. I @tbl-reliability ser vi at den relative typiske feilen er lavest for utregning på 4mmol med CV = 4.1 kontra 2mmol med CV = 9.2.  
+
+
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
-#| label: "Reliability table"
+#| label: "tbl-reliability"
 #| tbl-cap: "**Reliability of lactate threshold**"
-#| tbl-subcap: "Using fixed blood lactate concentration method (FBLC)"
 
 # Table showing Reliability
 cyclingstudy %>%
