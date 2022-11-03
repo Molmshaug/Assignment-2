@@ -1,7 +1,7 @@
 ---
 title: "Arbeidskrav 2"
 format: html
-editor: visual
+editor: source
 ---
 
 # Oppgave 1
