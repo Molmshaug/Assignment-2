@@ -6,6 +6,8 @@ editor: visual
 
 # Oppgave 1
 
+Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 20 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkrueven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol*L) med metoden "inverse prediction". 
+
 ```{r}
 #| include: false
 
@@ -42,6 +44,9 @@ df_fun <- function(x) {
 #| echo: false
 #| warning: false
 #| message: false
+#| label: "lt table"
+#| tbl-cap: "**Calculated Lactate Threshold**"
+#| tbl-subcap: "Using fixed blood lactate concentration method (FBLC)"
 
 # Table showing LT
 cyclingstudy %>%
@@ -177,9 +182,7 @@ summary(cal)
 preds <- exp(predict(cal, newdata = unknown))
 ```
 
-
 De predikerte tallene representerer størrelsen på DNA-fragmentene.
-
 
 ```{r}
 
@@ -198,12 +201,9 @@ table %>%
 
 ```
 
-
-
 # Oppgave 3
 
 Hvordan påvirker knebøy volum hypertrofi i Vastus Lateralis?
-
 
 Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i knebøy per deltager.
 
@@ -224,7 +224,7 @@ dat <- hypertrophy %>%
 
 ```
 
-Lager en modell som predikerer endring i vasus lateralis´tverrsnitt opp mot treningsvolum og tester modell opp mot antagelser. 
+Lager en modell som predikerer endring i vasus lateralis´tverrsnitt opp mot treningsvolum og tester modell opp mot antagelser.
 
 ```{r, echo=TRUE}
 mod <- lm(VL_change ~ SQUAT_VOLUME, data = dat)
@@ -256,4 +256,4 @@ dat %>%
 
 3.  T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimert koeffisient delt på standardfeilet til estimert koeffesient.
 
-4.  P-verdien forteller oss hvor stor sannsynligheten er for at et observert  avvik fra nullhypotesen ikke skyldes tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, som viser at sannsynligheten for at den observerte forskjellen skyldes tilfeldigheter er 28%. Dette er høyere enn signifikansterskelen på 5%.
+4.  P-verdien forteller oss hvor stor sannsynligheten er for at et observert avvik fra nullhypotesen ikke skyldes tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, som viser at sannsynligheten for at den observerte forskjellen skyldes tilfeldigheter er 28%. Dette er høyere enn signifikansterskelen på 5%.
