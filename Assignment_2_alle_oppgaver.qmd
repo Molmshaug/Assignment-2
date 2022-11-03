@@ -2,11 +2,13 @@
 title: "Arbeidskrav 2"
 format: html
 editor: source
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Oppgave 1
 
-Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 20 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkrueven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol*L) med metoden "inverse prediction". 
+Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 20 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkrueven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol\*L) med metoden "inverse prediction".
 
 ```{r}
 #| include: false
@@ -90,8 +92,6 @@ cyclingstudy %>%
              meso1_ana = "Meso1",
              meso2_ana = "Meso2",
              meso3_ana = "Meso3") %>% 
-  tab_header(title = md("**Calculated Lactate Threshold**"),
-             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
   tab_footnote(footnote = "Showing the first 4 rows in the dataset") %>% 
   tab_footnote(footnote = "Abbriviations: LT, lactate threshold")
   
@@ -101,6 +101,9 @@ cyclingstudy %>%
 #| echo: false
 #| warning: false
 #| message: false
+#| label: "Reliability table"
+#| tbl-cap: "**Reliability of lactate threshold**"
+#| tbl-subcap: "Using fixed blood lactate concentration method (FBLC)"
 
 # Table showing Reliability
 cyclingstudy %>%
@@ -143,8 +146,6 @@ cyclingstudy %>%
   cols_label(m = "M",
              cv = "CV") %>%
   tab_stubhead(label = "Lactate [BLa-]") %>% 
-  tab_header(title = md("**Reliability of lactate threshold**"),
-             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
   tab_footnote(footnote = "Abbriviations: M, mean; CV, coefficient of variations")
 
 ```
