@@ -8,6 +8,11 @@ editor_options:
 
 # Oppgave 1
 
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
+=======
+Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 21 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkurven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol\*L) med metoden "inverse prediction". @tbl-lt viser de predikerte verdiene for fire av deltakerne. 
+
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 ```{r}
 #| include: false
 
@@ -44,6 +49,11 @@ df_fun <- function(x) {
 #| echo: false
 #| warning: false
 #| message: false
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
+=======
+#| label: tbl-lt
+#| tbl-cap: "**Calculated Lactate Threshold**"
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 
 # Table showing LT
 cyclingstudy %>%
@@ -70,7 +80,7 @@ cyclingstudy %>%
   pivot_wider(names_from = c(timepoint, lactate),
               values_from = watt) %>%
   select(subject, pre_aer, meso1_aer, meso2_aer, meso3_aer,
-         pre_ana, meso1_ana, meso2_ana, meso3_ana) %>% 
+         pre_ana, meso1_ana, meso2_ana, meso3_ana) %>%
   filter(subject <= 4) %>% 
   ungroup() %>% 
   gt() %>% 
@@ -87,17 +97,28 @@ cyclingstudy %>%
              meso1_ana = "Meso1",
              meso2_ana = "Meso2",
              meso3_ana = "Meso3") %>% 
-  tab_header(title = md("**Calculated Lactate Threshold**"),
-             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
   tab_footnote(footnote = "Showing the first 4 rows in the dataset") %>% 
   tab_footnote(footnote = "Abbriviations: LT, lactate threshold")
   
 ```
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
+=======
+
+
+Vi undersøkte også reliabiliteten til de to fikserte laktatverdiene. I @tbl-reliability ser vi at den relative typiske feilen er lavest for utregning på 4mmol med CV = 4.1 kontra 2mmol med CV = 9.2.  
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 
 ```{r}
 #| echo: false
 #| warning: false
 #| message: false
+
+```{r}
+#| echo: false
+#| warning: false
+#| message: false
+#| label: "tbl-reliability"
+#| tbl-cap: "**Reliability of lactate threshold**"
 
 # Table showing Reliability
 cyclingstudy %>%
@@ -140,15 +161,16 @@ cyclingstudy %>%
   cols_label(m = "M",
              cv = "CV") %>%
   tab_stubhead(label = "Lactate [BLa-]") %>% 
-  tab_header(title = md("**Reliability of lactate threshold**"),
-             subtitle = "Using fixed blood lactate concentration method (FBLC)") %>% 
   tab_footnote(footnote = "Abbriviations: M, mean; CV, coefficient of variations")
 
 ```
 
 # Oppgave 2
 
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
 
+=======
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 ```{r}
 # Create a data frame of known distances and molecular weights
 
@@ -179,10 +201,15 @@ summary(cal)
 
 preds <- exp(predict(cal, newdata = unknown))
 ```
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
 
 
 De predikerte tallene representerer størrelsen på DNA-fragmentene.
 
+=======
+
+De predikerte tallene representerer størrelsen på DNA-fragmentene.
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 
 ```{r}
 
@@ -203,11 +230,14 @@ table %>%
 
 
 
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
 # Oppgave 3
 
 Hvordan påvirker knebøy volum hypertrofi i Vastus Lateralis?
 
 
+=======
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 Tabell som viser endring i målt volum på Vastus Lateralis og totalt volum i knebøy per deltager.
 
 ```{r, warning=FALSE, message=FALSE, echo=FALSE}
@@ -227,7 +257,11 @@ dat <- hypertrophy %>%
 
 ```
 
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
 Lager en modell som predikerer endring i vasus lateralis´tverrsnitt opp mot treningsvolum og tester modell opp mot antagelser. 
+=======
+Lager en modell som predikerer endring i vasus lateralis´tverrsnitt opp mot treningsvolum og tester modell opp mot antagelser.
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
 
 ```{r, echo=TRUE}
 mod <- lm(VL_change ~ SQUAT_VOLUME, data = dat)
@@ -259,4 +293,8 @@ dat %>%
 
 3.  T-verdien er tallet som brukes for å teste en nullhypotese. Utregningen er estimert koeffisient delt på standardfeilet til estimert koeffesient.
 
+<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
 4.  P-verdien forteller oss hvor stor sannsynligheten er for at et observert  avvik fra nullhypotesen ikke skyldes tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, som viser at sannsynligheten for at den observerte forskjellen skyldes tilfeldigheter er 28%. Dette er høyere enn signifikansterskelen på 5%.
+=======
+4.  P-verdien forteller oss hvor stor sannsynligheten er for at et observert avvik fra nullhypotesen ikke skyldes tilfeldigheter. Dersom nullhypotesen er sann, ønsker vi at det er mindre enn 5% sjanse for å gjøre en forkastningsfeil. Det vil si at p-verdien er mindre enn 0.05. I vårt datasett fant vi: P-verdi = 0.281, som viser at sannsynligheten for at den observerte forskjellen skyldes tilfeldigheter er 28%. Dette er høyere enn signifikansterskelen på 5%.
+>>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
