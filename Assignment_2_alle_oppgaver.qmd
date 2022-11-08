@@ -153,8 +153,8 @@ cyclingstudy %>%
 
 # Oppgave 2
 
-Vi har  ekstrahert DNA fra blodprøver på 4 studenter og har gjennomføty ACTN3 genotyping. En av studentene kom fikk ikke frem DNA i sin prøve. Vi gjennomførte derfor sekvensering av to prøver fra  hver av tre studenter. 
-I elektroforese-gelen har vi en "ladder" som er kjente genmarkører. Gjennom programmvaren FIJI kunne vi hente ut data.  Vi har valgt ut det beste  resultatet fra de tre studentene og  gjort analyser av disse. 
+Vi har ekstrahert DNA fra blodprøver på 4 studenter og har gjennomført ACTN3 genotyping. En av studentene fikk ikke frem DNA i sin prøve. Vi gjennomførte derfor sekvensering av to prøver fra  hver av tre studenter. 
+I elektroforese-gelen har vi en "ladder" med kjente genmarkører. Gjennom programmvaren FIJI kunne vi hente ut data.  Vi har valgt ut det beste  resultatet fra de tre studentene og  gjort analyser av disse. 
 
 ```{r}
 # Create a data frame of known distances and molecular weights
