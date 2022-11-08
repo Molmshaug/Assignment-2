@@ -8,21 +8,17 @@ editor_options:
 
 # Oppgave 1
 
-<<<<<<< HEAD:Assignment 2 alle oppgaver.qmd
-=======
 Vi valgte å bruke cyclingstudy datasettet istedenfor reliabilitets-datasettet vårt ettersom vi ikke testet laktatprofiler. Cyclingstudy-datasettet inneholder 21 forsøkpersoner hvor de aller fleste har gjennomført en laktatprofil på fire ulike tidspunkt (pre, meso1, meso2, og meso3). I cyclingstudy datasettet tilførte vi en tredjegrads polynominal regresjonsmodell som predikerer laktatet utifra watt for å fange opp laktatkurven (sammenhengen mellom wattbelstninger og faktiske laktatverdier). Videre har vi regnet ut effektutvikling (watt) ved fikserte blodlaktatverdier (2- og 4 mmol\*L) med metoden "inverse prediction". @tbl-lt viser de predikerte verdiene for fire av deltakerne. 
 
->>>>>>> 16c6a286400936c065341cdfbaf8c173e73936be:Assignment_2_alle_oppgaver.qmd
+
 ```{r}
 #| include: false
-
 
 library(tidyverse)
 library(exscidata)
 library(modelr)
 library(gt)
 library(gtExtras)
-
 
 
 # import data
@@ -157,8 +153,8 @@ cyclingstudy %>%
 
 # Oppgave 2
 
-#Vi har  ekstrahert DNA fra blodprøver på 4 studenter og har gjennomføty ACTN3 genotyping. En av studentene kom fikk ikke frem DNA i sin prøve. Vi gjennomførte derfor sekvensering av to prøver fra  hver av tre studenter. 
-I elektroforese-gelen har vi en "ladder" som er kjente genmarkører. Gjennom FIJI kunne vi hente ut data,  Vi har valgt ut det beste  resultatet fra de tre studentene og  gjort analyser på disse. 
+Vi har  ekstrahert DNA fra blodprøver på 4 studenter og har gjennomføty ACTN3 genotyping. En av studentene kom fikk ikke frem DNA i sin prøve. Vi gjennomførte derfor sekvensering av to prøver fra  hver av tre studenter. 
+I elektroforese-gelen har vi en "ladder" som er kjente genmarkører. Gjennom programmvaren FIJI kunne vi hente ut data.  Vi har valgt ut det beste  resultatet fra de tre studentene og  gjort analyser av disse. 
 
 ```{r}
 # Create a data frame of known distances and molecular weights
@@ -209,6 +205,8 @@ table %>%
   tab_spanner(label = "Forsøkspersoner", columns = Pia:Emil)
 
 ```
+
+
 
 # Oppgave 3
 
