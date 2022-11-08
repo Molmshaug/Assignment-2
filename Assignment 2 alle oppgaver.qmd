@@ -1,7 +1,9 @@
 ---
 title: "Arbeidskrav 2"
 format: html
-editor: visual
+editor: source
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Oppgave 1
@@ -45,19 +47,19 @@ df_fun <- function(x) {
 
 # Table showing LT
 cyclingstudy %>%
-  select(subject, group, timepoint, lac.125:lac.375) %>%
+  select(subject, group, timepoint, lac.125:lac.375) %>% 
   pivot_longer(names_to = "x", 
                values_to = "lactate", 
                names_prefix = "lac.",
                names_transform = list(x = as.numeric),
                cols = lac.125:lac.375) %>% 
   filter(!is.na(lactate)) %>% 
-  group_by(subject, timepoint) %>%
+  group_by(subject, timepoint) %>% 
   nest() %>% 
   mutate(model = map(data, subject_model),
          watt_range = list(watt = seq(from = 125, to = 375, by = 0.1)),
          df = map(watt_range, df_fun),
-         pred = map2(df, model, add_predictions)) %>%
+         pred = map2(df, model, add_predictions)) %>% 
   unnest(pred) %>% 
   filter(abs(pred - 4) == min(abs(pred - 4)) | 
            abs(pred - 2) == min(abs(pred - 2))) %>% 
@@ -145,6 +147,7 @@ cyclingstudy %>%
 ```
 
 # Oppgave 2
+
 
 ```{r}
 # Create a data frame of known distances and molecular weights
